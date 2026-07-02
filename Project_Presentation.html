@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation — AI-Powered M&A Arbitrage & Deal Success Predictor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f8fafc;
+    --bg3: #f1f5f9;
+    --bg4: #e2e8f0;
+    --text: #0f172a;
+    --text2: #334155;
+    --text3: #94a3b8;
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --cyan: #0891b2;
+    --cyan-light: #cffafe;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --border: #e2e8f0;
+    --border2: #cbd5e1;
+    --gradient: linear-gradient(135deg, #2563eb, #0891b2);
+    --gradient2: linear-gradient(135deg, #3b82f6, #06b6d4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f0f0;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ========== SLIDE SYSTEM ========== */
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    flex-direction: column;
+    padding: 56px 80px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .slide.active { display: flex; }
+
+  .slide::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -25%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(37,99,235,0.04) 0%, transparent 70%);
+    z-index: 0;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ========== SLIDE FOOTER ========== */
+  .slide-footer {
+    position: absolute;
+    bottom: 18px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    z-index: 10;
+  }
+  .slide-num {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .footer-logo {
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  /* ========== TYPOGRAPHY ========== */
+  .slide-title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .slide-title .hl {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slide-subtitle {
+    font-size: 19px;
+    color: var(--text2);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  h3.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  /* ========== GRIDS ========== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+  /* ========== CARDS ========== */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text3);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .card-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .card-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* ========== TAGS ========== */
+  .tag {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  .tag.blue { background: var(--primary-light); color: var(--primary); }
+  .tag.cyan { background: var(--cyan-light); color: var(--cyan); }
+  .tag.green { background: var(--green-light); color: var(--green); }
+  .tag.amber { background: var(--amber-light); color: var(--amber); }
+  .tag.red { background: var(--red-light); color: var(--red); }
+  .tag.purple { background: var(--purple-light); color: var(--purple); }
+
+  /* ========== FEATURE LISTS ========== */
+  .feature-list { list-style: none; padding: 0; }
+  .feature-list li {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text2);
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list li strong { color: var(--text); }
+  .feature-list .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .feature-list .icon.blue { background: var(--primary-light); color: var(--primary); }
+  .feature-list .icon.green { background: var(--green-light); color: var(--green); }
+  .feature-list .icon.amber { background: var(--amber-light); color: var(--amber); }
+  .feature-list .icon.red { background: var(--red-light); color: var(--red); }
+  .feature-list .icon.cyan { background: var(--cyan-light); color: var(--cyan); }
+  .feature-list .icon.purple { background: var(--purple-light); color: var(--purple); }
+
+  /* ========== TABLES ========== */
+  .ppt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .ppt-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg3);
+    color: var(--primary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--border2);
+    font-weight: 700;
+  }
+  .ppt-table td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .ppt-table tr:hover td { background: var(--bg3); }
+
+  /* ========== ARCHITECTURE ========== */
+  .arch-stack { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .arch-row { display: flex; align-items: center; gap: 12px; }
+  .arch-label {
+    width: 90px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text3);
+    text-align: right;
+  }
+  .arch-block {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .arch-block span { display: block; font-size: 10px; font-weight: 400; opacity: 0.85; margin-top: 3px; }
+  .arch-block.fe { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .arch-block.api { background: linear-gradient(135deg, #10b981, #059669); }
+  .arch-block.ml { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .arch-block.llm { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .arch-block.db { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .arch-connector { width: 90px; text-align: right; color: var(--text3); font-size: 16px; line-height: 1; }
+
+  /* ========== CODE ========== */
+  .code-block {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #e2e8f0;
+    overflow: hidden;
+  }
+  .code-block .kw { color: #7dd3fc; }
+  .code-block .str { color: #86efac; }
+  .code-block .cmt { color: #64748b; }
+
+  /* ========== FORMULA ========== */
+  .formula-box {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 18px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    text-align: center;
+    color: var(--primary);
+    margin: 14px 0;
+    font-weight: 600;
+  }
+
+  /* ========== PROGRESS BAR ========== */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gradient);
+    transition: width 0.3s ease;
+  }
+
+  /* ========== COVER ========== */
+  .cover-slide {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .cover-slide .slide-title { font-size: 50px; margin-bottom: 12px; }
+  .cover-slide .slide-subtitle { font-size: 20px; max-width: 720px; }
+  .cover-badge {
+    display: inline-block;
+    background: var(--gradient);
+    color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .cover-meta {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text2);
+  }
+  .cover-meta strong { color: var(--text); }
+  .cover-institution {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 1px;
+  }
+
+  /* ========== COMPARISON ========== */
+  .cmp-yes { color: var(--green); font-weight: 700; }
+  .cmp-no { color: var(--red); font-weight: 700; }
+  .cmp-partial { color: var(--amber); font-weight: 700; }
+
+  /* ========== NAVIGATION ========== */
+  .nav-controls {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+  }
+  .nav-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: white;
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .nav-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  /* ========== BIG NUMBER ========== */
+  .big-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 46px;
+    font-weight: 800;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ========== PRINT ========== */
+  @media print {
+    body { overflow: visible; background: white; }
+    .slide { display: flex !important; page-break-after: always; height: 100vh; width: 100vw; }
+    .nav-controls { display: none; }
+    .progress-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-bar-fill" id="progress"></div></div>
+
+<!-- =================== SLIDE 1: TITLE =================== -->
+<div class="slide cover-slide active" id="slide-1">
+  <div class="cover-badge">PGP AI &amp; Data Science · Group Project</div>
+  <h1 class="slide-title">AI-Powered M&amp;A Arbitrage &amp;<br><span class="hl">Deal Success Predictor</span></h1>
+  <p class="slide-subtitle">
+    An intelligent platform integrating quantitative ML models, Monte Carlo simulations, 
+    and LLM-powered regulatory analysis for merger arbitrage decision support.
+  </p>
+  <div style="margin-top: 16px;">
+    <span class="tag blue">FastAPI</span>
+    <span class="tag cyan">React 19</span>
+    <span class="tag green">MongoDB</span>
+    <span class="tag purple">Claude Sonnet 4.5</span>
+    <span class="tag amber">Monte Carlo</span>
+    <span class="tag red">XGBoost</span>
+  </div>
+  <div class="cover-meta">
+    <div><strong>Mohit Patle</strong> (27PGAI0102) &nbsp;·&nbsp; <strong>Pushkar Brahmankar</strong> (27PGAI0100)</div>
+    <div class="cover-institution">Jio Institute</div>
+    <div style="font-size: 13px; color: var(--text3);">June 2026</div>
+  </div>
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">01 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 2: PROBLEM =================== -->
+<div class="slide" id="slide-2">
+  <h3 class="section-title">The Problem</h3>
+  <h1 class="slide-title">Why M&A Deal Prediction <span class="hl">Matters</span></h1>
+  <p class="slide-subtitle">Mergers & Acquisitions worth trillions of dollars face uncertain completion outcomes.</p>
+  
+  <div class="grid-4" style="margin-bottom: 24px;">
+    <div class="card" style="border-top: 3px solid var(--primary);">
+      <div class="card-value" style="color: var(--primary);">$3.1T</div>
+      <div class="card-sub">Global M&A Volume (2024)</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--red);">
+      <div class="card-value" style="color: var(--red);">8-12%</div>
+      <div class="card-sub">Deals that FAIL annually</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--amber);">
+      <div class="card-value" style="color: var(--amber);">$60B+</div>
+      <div class="card-sub">Merger Arb AUM</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--green);">
+      <div class="card-value" style="color: var(--green);">18+</div>
+      <div class="card-sub">Global Regulators</div>
+    </div>
+  </div>
+
+  <ul class="feature-list">
+    <li><div class="icon red">⚠</div><div><strong>Multi-jurisdictional regulatory uncertainty</strong> — FTC, EU EC, CMA, SAMR, CFIUS all review simultaneously with different standards</div></li>
+    <li><div class="icon amber">📊</div><div><strong>Information overload</strong> — 20+ active deals × filings, proxy materials, precedent, macro signals</div></li>
+    <li><div class="icon blue">🔮</div><div><strong>No integrated prediction tools</strong> — Bloomberg = data, not prediction. No unified platform exists.</div></li>
+  </ul>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">02 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 3: SOLUTION =================== -->
+<div class="slide" id="slide-3">
+  <h3 class="section-title">Our Solution</h3>
+  <h1 class="slide-title"><span class="hl">Six Quantitative Modules</span><br>in One Platform</h1>
+  <p class="slide-subtitle">Arbitrage.Terminal integrates ML prediction, simulation, risk scoring & LLM analysis.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="card-title" style="color: var(--green);">📈 Module 1</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Deal Success Prediction</div>
+      <div style="font-size: 13px; color: var(--text2);">12-feature logistic ensemble with SHAP-style explainability. Outputs probability + feature attributions.</div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--cyan);">
+      <div class="card-title" style="color: var(--cyan);">📉 Module 2</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Spread Forecasting</div>
+      <div style="font-size: 13px; color: var(--text2);">Time-series projection with 95% confidence bands. 60-day lookback + forward projection up to 180 days.</div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="card-title" style="color: var(--red);">⚖️ Module 3</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Regulatory Risk Scoring</div>
+      <div style="font-size: 13px; color: var(--text2);">0–100 score with explainable factors. Covers 18 global regulators and sector-specific scrutiny.</div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--amber);">
+      <div class="card-title" style="color: var(--amber);">🗳️ Module 4</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Shareholder Vote Simulation</div>
+      <div style="font-size: 13px; color: var(--text2);">Monte Carlo with 3,000 samples. Models institutional, retail & activist blocs with 95% CI.</div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--purple);">
+      <div class="card-title" style="color: var(--purple);">🌍 Module 5</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Geopolitical Friction</div>
+      <div style="font-size: 13px; color: var(--text2);">24-country friction index scoring cross-border deal risk from Singapore (0.18) to China (0.85).</div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--primary);">
+      <div class="card-title" style="color: var(--primary);">🤖 Module 6</div>
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text);">LLM Regulatory Analysis</div>
+      <div style="font-size: 13px; color: var(--text2);">Claude Sonnet 4.5 streaming analysis with precedent citations and actionable recommendations.</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">03 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 4: ARCHITECTURE =================== -->
+<div class="slide" id="slide-4">
+  <h3 class="section-title">Architecture</h3>
+  <h1 class="slide-title">System <span class="hl">Architecture</span></h1>
+  <p class="slide-subtitle">Five-layer client-server architecture with clear separation of concerns.</p>
+
+  <div class="grid-2" style="align-items: start;">
+    <div class="arch-stack">
+      <div class="arch-row"><div class="arch-label">Frontend</div><div class="arch-block fe">React 19 · TailwindCSS · Recharts · Force-Graph<span>Terminal-style dark UI · SSE streaming · Responsive Grid</span></div></div>
+      <div class="arch-row"><div class="arch-connector">↕</div><div style="flex:1;border-bottom:1px dashed var(--border2);"></div></div>
+      <div class="arch-row"><div class="arch-label">API</div><div class="arch-block api">FastAPI (Python 3.11) · 10 REST Endpoints · SSE<span>Pydantic validation · CORS · Async/Await</span></div></div>
+      <div class="arch-row"><div class="arch-connector">↕</div><div style="flex:1;border-bottom:1px dashed var(--border2);"></div></div>
+      <div class="arch-row"><div class="arch-label">Analytics</div><div class="arch-block ml">Logistic Ensemble · Monte Carlo · Time-Series<span>SHAP attributions · Scenario engine · 24-country index</span></div></div>
+      <div class="arch-row"><div class="arch-connector">↕</div><div style="flex:1;border-bottom:1px dashed var(--border2);"></div></div>
+      <div class="arch-row"><div class="arch-label">LLM</div><div class="arch-block llm">Claude Sonnet 4.5 (Anthropic)<span>Streaming SSE · Precedent-grounded regulatory analysis</span></div></div>
+      <div class="arch-row"><div class="arch-connector">↕</div><div style="flex:1;border-bottom:1px dashed var(--border2);"></div></div>
+      <div class="arch-row"><div class="arch-label">Database</div><div class="arch-block db">MongoDB · Motor async driver<span>30 synthetic M&A deals · Auto-seeded on startup</span></div></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">Key API Endpoints</div>
+        <table class="ppt-table">
+          <tr><td style="color:var(--green); font-weight:600;">GET</td><td>/api/deals</td></tr>
+          <tr><td style="color:var(--green); font-weight:600;">GET</td><td>/api/deals/{id}</td></tr>
+          <tr><td style="color:var(--green); font-weight:600;">GET</td><td>/api/deals/{id}/graph</td></tr>
+          <tr><td style="color:var(--amber); font-weight:600;">POST</td><td>/api/deals/{id}/scenario</td></tr>
+          <tr><td style="color:var(--amber); font-weight:600;">POST</td><td>/api/regulatory/analyze</td></tr>
+          <tr><td style="color:var(--green); font-weight:600;">GET</td><td>/api/portfolio/summary</td></tr>
+          <tr><td style="color:var(--green); font-weight:600;">GET</td><td>/api/news-feed</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">Data Flow</div>
+        <div style="font-size: 13px; color: var(--text2); line-height: 1.9;">
+          1. MongoDB auto-seeded with 30 deals<br>
+          2. REST APIs enrich data in real-time<br>
+          3. All 6 modules computed per request<br>
+          4. LLM streamed via SSE<br>
+          5. Scenario shocks recompute everything
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">04 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 5: PREDICTION ENGINE =================== -->
+<div class="slide" id="slide-5">
+  <h3 class="section-title">Module 1</h3>
+  <h1 class="slide-title">Deal Success <span class="hl">Prediction Engine</span></h1>
+  <p class="slide-subtitle">12-feature logistic ensemble with SHAP-style explainability.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="formula-box">P(success) = σ(1.40 + Σ feature_contributions)</div>
+      <table class="ppt-table" style="font-size: 12px;">
+        <thead><tr><th>Feature</th><th>Direction</th><th>Weight</th></tr></thead>
+        <tbody>
+          <tr><td>Deal Size</td><td style="color:var(--red);">Negative</td><td>−0.015 × log(1+val)</td></tr>
+          <tr><td>HHI Concentration</td><td style="color:var(--red);">Negative</td><td>−0.0018 × Δ</td></tr>
+          <tr><td>Regulatory Burden</td><td style="color:var(--red);">Negative</td><td>−0.35 × avg_strictness</td></tr>
+          <tr><td>Governance Resistance</td><td style="color:var(--red);">Negative</td><td>−0.85 × gov − 1.10 × mgmt</td></tr>
+          <tr><td>Financing Certainty</td><td style="color:var(--green);">Positive</td><td>+0.85 × certainty</td></tr>
+          <tr><td>Track Record</td><td style="color:var(--green);">Positive</td><td>+0.70 × (rate − 0.5)</td></tr>
+          <tr><td>Competing Bidder</td><td style="color:var(--red);">Negative</td><td>−0.40 × prob</td></tr>
+          <tr><td>Activist Pressure</td><td style="color:var(--red);">Negative</td><td>−0.55 × intensity</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">SHAP-Style Attributions</div>
+        <div style="font-size: 13px; color: var(--text2); line-height: 1.8;">Each feature's raw contribution to the logit is output as an attribution score, enabling:</div>
+        <ul style="color: var(--text2); font-size: 13px; margin-top: 8px; padding-left: 16px; line-height: 1.9;">
+          <li>Bidirectional bar charts (positive/negative)</li>
+          <li>Transparent "why this prediction" explainability</li>
+          <li>Identification of dominant risk factors per deal</li>
+          <li>Comparison across deals</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Sample Output</div>
+        <div class="code-block" style="font-size: 11px;">
+{<br>
+&nbsp;&nbsp;<span class="str">"probability"</span>: 0.7832,<br>
+&nbsp;&nbsp;<span class="str">"logit"</span>: 1.284,<br>
+&nbsp;&nbsp;<span class="str">"attributions"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Deal Size"</span>: -0.063,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Financing Certainty"</span>: 0.808,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Regulatory Burden"</span>: -0.280<br>
+&nbsp;&nbsp;}<br>
+}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">05 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 6: SPREAD & MONTE CARLO =================== -->
+<div class="slide" id="slide-6">
+  <h3 class="section-title">Modules 2 & 4</h3>
+  <h1 class="slide-title">Spread Forecasting & <span class="hl">Monte Carlo</span></h1>
+  <p class="slide-subtitle">Time-series price projection + shareholder vote simulation.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="card" style="margin-bottom: 14px; border-left: 3px solid var(--cyan);">
+        <div class="card-title" style="color: var(--cyan);">Spread Forecasting</div>
+        <ul style="color: var(--text2); font-size: 13px; line-height: 2; padding-left: 16px;">
+          <li>60-day historical lookback + forward projection</li>
+          <li><strong style="color:var(--text);">Anchor:</strong> offer_price × P(success)</li>
+          <li><strong style="color:var(--text);">Mean reversion:</strong> 10% daily convergence</li>
+          <li><strong style="color:var(--text);">Forward decay:</strong> accelerating rate</li>
+          <li><strong style="color:var(--text);">95% confidence band:</strong> ±1.96σ</li>
+          <li><strong style="color:var(--text);">Scenario shocks:</strong> FTC, VIX, rates</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--cyan);">
+        <div class="card-title">Visualization</div>
+        <div style="color: var(--text2); font-size: 13px; line-height: 1.8;">
+          Recharts ComposedChart with:<br>
+          • White solid line → Historical price<br>
+          • Cyan dashed line → Forecast<br>
+          • Shaded area → Confidence band<br>
+          • Green reference → Offer price
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px; border-left: 3px solid var(--amber);">
+        <div class="card-title" style="color: var(--amber);">Monte Carlo Vote Simulator</div>
+        <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">3,000 Random Samples</div>
+        <table class="ppt-table" style="font-size: 12px;">
+          <thead><tr><th>Bloc</th><th>Weight</th><th>σ</th></tr></thead>
+          <tbody>
+            <tr><td>Institutional</td><td>75%</td><td>0.08</td></tr>
+            <tr><td>Retail / Arb</td><td>25%</td><td>0.12</td></tr>
+            <tr><td>Activist Coalition</td><td>Variable</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--amber);">
+        <div class="card-title">Output</div>
+        <div class="code-block" style="font-size: 11px;">
+{<br>
+&nbsp;&nbsp;<span class="str">"approval_probability"</span>: 0.8924,<br>
+&nbsp;&nbsp;<span class="str">"mean_support_pct"</span>: 68.4,<br>
+&nbsp;&nbsp;<span class="str">"ci_low_pct"</span>: 52.1,<br>
+&nbsp;&nbsp;<span class="str">"ci_high_pct"</span>: 84.7,<br>
+&nbsp;&nbsp;<span class="str">"blocs"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="str">"name"</span>: <span class="str">"BlackRock"</span>, <span class="str">"lean"</span>: <span class="str">"Support"</span>},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="str">"name"</span>: <span class="str">"Activist"</span>, <span class="str">"lean"</span>: <span class="str">"Against"</span>}<br>
+&nbsp;&nbsp;]<br>
+}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">06 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 7: REG & GEO =================== -->
+<div class="slide" id="slide-7">
+  <h3 class="section-title">Modules 3 & 5</h3>
+  <h1 class="slide-title">Regulatory Risk & <span class="hl">Geopolitical Friction</span></h1>
+  <p class="slide-subtitle">Multi-factor risk scoring across 18 regulators and 24 countries.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="card-title" style="color: var(--red);">Regulatory Risk (0–100)</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.9;">
+        <strong style="color:var(--text);">Base:</strong> 25 + 6 × num_regulators<br>
+        <strong style="color:var(--text);">HHI:</strong> +0.05 × HHI_change (cap 40)<br>
+        <strong style="color:var(--text);">HHI > 200:</strong> +8 bonus<br>
+        <strong style="color:var(--text);">HHI > 600:</strong> +12 (killer-acquisition)<br>
+        <strong style="color:var(--text);">CFIUS:</strong> +10 (national security)<br>
+        <strong style="color:var(--text);">SAMR:</strong> +10 (China approval)<br>
+        <strong style="color:var(--text);">Cross-border:</strong> +6 premium<br>
+        <strong style="color:var(--text);">Sector:</strong> Tech +10, Pharma +8, HC +12
+      </div>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--purple);">
+      <div class="card-title" style="color: var(--purple);">Geopolitical Friction (0–100)</div>
+      <div class="formula-box" style="font-size: 13px;">Score = (FR_acq + FR_tgt) × 50 × (0.7 + 0.6 × CB)</div>
+      <div style="font-size: 13px; color: var(--text2); margin-bottom: 8px;"><strong style="color:var(--text);">24-Country Index (samples):</strong></div>
+      <table class="ppt-table" style="font-size: 11px;">
+        <thead><tr><th>Country</th><th>Risk</th><th>Country</th><th>Risk</th></tr></thead>
+        <tbody>
+          <tr><td>🇨🇦 Canada</td><td>0.10</td><td>🇮🇳 India</td><td>0.30</td></tr>
+          <tr><td>🇺🇸 US</td><td>0.15</td><td>🇹🇼 Taiwan</td><td>0.45</td></tr>
+          <tr><td>🇬🇧 UK</td><td>0.12</td><td>🇨🇳 China</td><td>0.85</td></tr>
+          <tr><td>🇯🇵 Japan</td><td>0.20</td><td>🇷🇺 Russia</td><td>0.95</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <div class="card-title">18 Global Regulators Tracked</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;">
+      <span class="tag red">FTC</span><span class="tag red">DOJ</span><span class="tag red">CFIUS</span>
+      <span class="tag cyan">EC</span><span class="tag cyan">CMA</span>
+      <span class="tag amber">SAMR</span><span class="tag amber">JFTC</span>
+      <span class="tag green">CCI</span><span class="tag green">SEBI</span><span class="tag green">NCLT</span>
+      <span class="tag amber">FIRB</span><span class="tag amber">CADE</span>
+      <span class="tag blue">FRB</span><span class="tag blue">OCC</span><span class="tag blue">STB</span>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">07 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 8: LLM =================== -->
+<div class="slide" id="slide-8">
+  <h3 class="section-title">Module 6</h3>
+  <h1 class="slide-title">LLM-Powered <span class="hl">Regulatory Analysis</span></h1>
+  <p class="slide-subtitle">Claude Sonnet 4.5 streaming analysis with precedent citations.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">LLM Prompt Engineering</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.8;">
+        <strong style="color:var(--text);">System Role:</strong> "Senior M&A antitrust attorney at a top-tier hedge fund"<br><br>
+        <strong style="color:var(--text);">Context Injected:</strong><br>
+        • Deal metadata (acquirer, target, value, sector)<br>
+        • Regulatory jurisdictions & HHI data<br>
+        • Cross-border dynamics<br>
+        • Model outputs (P(success), reg risk score)<br><br>
+        <strong style="color:var(--text);">Required Output:</strong><br>
+        1. Top 3 antitrust concerns<br>
+        2. Precedent cases (MSFT-ATVI, NVDA-Arm...)<br>
+        3. Likely remedies / divestitures<br>
+        4. Timeline estimate<br>
+        5. Recommendation (Hold / Buy / Avoid)
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">Streaming Architecture</div>
+        <div style="font-size: 13px; color: var(--text2); line-height: 1.8;">
+          <strong style="color:var(--text);">Protocol:</strong> Server-Sent Events (SSE)<br>
+          <strong style="color:var(--text);">Backend:</strong> FastAPI StreamingResponse<br>
+          <strong style="color:var(--text);">Frontend:</strong> ReadableStream + TextDecoder<br>
+          <strong style="color:var(--text);">Format:</strong> <code style="background:#e2e8f0;padding:2px 6px;border-radius:3px;color:var(--primary);">data: {"delta": "..."}</code><br><br>
+          Features:<br>
+          • Real-time typing effect in UI<br>
+          • Abort/Stop with AbortController<br>
+          • Live markdown rendering<br>
+          • Error handling with retry
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Historical Cases Referenced</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+          <span class="tag cyan">Microsoft-Activision</span>
+          <span class="tag red">Nvidia-Arm</span>
+          <span class="tag red">Adobe-Figma</span>
+          <span class="tag amber">Kroger-Albertsons</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">08 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 9: TECH STACK =================== -->
+<div class="slide" id="slide-9">
+  <h3 class="section-title">Implementation</h3>
+  <h1 class="slide-title">Technology <span class="hl">Stack</span></h1>
+  <p class="slide-subtitle">Full-stack application built with modern, production-grade technologies.</p>
+
+  <div class="grid-2">
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="card-title" style="color: var(--green);">Backend</div>
+      <table class="ppt-table" style="font-size: 12px;">
+        <tr><td>Framework</td><td>FastAPI 0.110</td></tr>
+        <tr><td>Database</td><td>MongoDB + Motor 3.3 (async)</td></tr>
+        <tr><td>Validation</td><td>Pydantic 2.6+</td></tr>
+        <tr><td>Server</td><td>Uvicorn 0.25 (ASGI)</td></tr>
+        <tr><td>Data</td><td>NumPy 1.26 + Pandas 2.2</td></tr>
+        <tr><td>LLM</td><td>Claude Sonnet 4.5</td></tr>
+        <tr><td>Auth</td><td>Python-Jose + BCrypt</td></tr>
+      </table>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--primary);">
+      <div class="card-title" style="color: var(--primary);">Frontend</div>
+      <table class="ppt-table" style="font-size: 12px;">
+        <tr><td>Framework</td><td>React 19</td></tr>
+        <tr><td>Styling</td><td>TailwindCSS 3.4</td></tr>
+        <tr><td>Charts</td><td>Recharts 3.6</td></tr>
+        <tr><td>Graphs</td><td>react-force-graph-2d</td></tr>
+        <tr><td>Routing</td><td>React Router 7.15</td></tr>
+        <tr><td>HTTP</td><td>Axios 1.16</td></tr>
+        <tr><td>Animation</td><td>Framer Motion</td></tr>
+        <tr><td>Icons</td><td>Lucide React</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <div class="card-title">Design Philosophy</div>
+    <div style="display: flex; gap: 20px; font-size: 13px; color: var(--text2);">
+      <div>🖥️ <strong style="color:var(--text);">Bloomberg Terminal</strong> — Dark mode, data-dense</div>
+      <div>⌨️ <strong style="color:var(--text);">JetBrains Mono</strong> — Monospaced for data</div>
+      <div>💡 <strong style="color:var(--text);">LED Status</strong> — Green/Amber/Red signals</div>
+      <div>📐 <strong style="color:var(--text);">1px Borders</strong> — Sharp, minimal</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">09 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 10: UI COMPONENTS =================== -->
+<div class="slide" id="slide-10">
+  <h3 class="section-title">Frontend</h3>
+  <h1 class="slide-title">Key <span class="hl">UI Components</span></h1>
+  <p class="slide-subtitle">7 custom-built interactive components for the terminal interface.</p>
+
+  <div class="grid-2">
+    <ul class="feature-list">
+      <li><div class="icon green">◐</div><div><strong>HealthGauge (SVG)</strong> — Semicircular gauge with Red/Amber/Green zones, animated needle</div></li>
+      <li><div class="icon cyan">📊</div><div><strong>SpreadChart (Recharts)</strong> — ComposedChart: historical + forecast + confidence band</div></li>
+      <li><div class="icon purple">🕸️</div><div><strong>ForceGraph</strong> — Force-directed deal ecosystem with neon-colored nodes</div></li>
+      <li><div class="icon blue">🤖</div><div><strong>LlmAnalyzePanel</strong> — SSE consumer with live markdown rendering</div></li>
+    </ul>
+    <ul class="feature-list">
+      <li><div class="icon amber">📰</div><div><strong>LiveTicker</strong> — Scrolling synthetic news: regulatory, market, activist headlines</div></li>
+      <li><div class="icon red">📊</div><div><strong>AttributionBars</strong> — Bidirectional bars: positive (green) / negative (red) SHAP</div></li>
+      <li><div class="icon green">📋</div><div><strong>MilestoneTimeline</strong> — Vertical timeline with LED status dots</div></li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top: 12px;">
+    <div class="card-title">4 Application Pages</div>
+    <div style="display: flex; gap: 16px;">
+      <div style="flex:1; text-align:center; padding:14px; background:var(--bg3); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:22px; margin-bottom:4px;">📋</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">Dashboard</div>
+        <div style="font-size:11px; color:var(--text3);">Deal Universe + Stats</div>
+      </div>
+      <div style="flex:1; text-align:center; padding:14px; background:var(--bg3); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:22px; margin-bottom:4px;">🔍</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">Deal Detail</div>
+        <div style="font-size:11px; color:var(--text3);">6-Module Deep Dive</div>
+      </div>
+      <div style="flex:1; text-align:center; padding:14px; background:var(--bg3); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:22px; margin-bottom:4px;">🧪</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">Simulator</div>
+        <div style="font-size:11px; color:var(--text3);">What-If Lab</div>
+      </div>
+      <div style="flex:1; text-align:center; padding:14px; background:var(--bg3); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:22px; margin-bottom:4px;">ℹ️</div>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">About</div>
+        <div style="font-size:11px; color:var(--text3);">System Overview</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">10 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 11: SIMULATOR =================== -->
+<div class="slide" id="slide-11">
+  <h3 class="section-title">Feature Deep-Dive</h3>
+  <h1 class="slide-title">What-If <span class="hl">Scenario Simulator</span></h1>
+  <p class="slide-subtitle">Interactive shock analysis that recomputes all 6 modules in real-time.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Available Scenario Shocks</div>
+      <ul class="feature-list">
+        <li><div class="icon red">⚖</div><div><strong>FTC/EC Phase II</strong><br><span style="color:var(--text3);">governance +0.20, hhi +150</span></div></li>
+        <li><div class="icon amber">🏢</div><div><strong>Competing Bidder</strong><br><span style="color:var(--text3);">competing_bidder_prob +0.30</span></div></li>
+        <li><div class="icon purple">📢</div><div><strong>New Activist Investor</strong><br><span style="color:var(--text3);">activist_intensity +0.25</span></div></li>
+        <li><div class="icon blue">📈</div><div><strong>Rate Shock</strong> (−200 to +500 bps) &nbsp;·&nbsp; <strong>VIX Spike</strong> (0–40 pts)</div></li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">Sample Output</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+          <div style="background:var(--bg3); padding:12px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px;">Baseline</div>
+            <div style="font-size:26px; font-weight:700; font-family:'JetBrains Mono'; color:var(--text);">72.4%</div>
+          </div>
+          <div style="background:var(--bg3); padding:12px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px;">Scenario</div>
+            <div style="font-size:26px; font-weight:700; font-family:'JetBrains Mono'; color:var(--red);">53.1%</div>
+          </div>
+          <div style="background:var(--bg3); padding:12px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px;">Delta</div>
+            <div style="font-size:26px; font-weight:700; font-family:'JetBrains Mono'; color:var(--red);">−19.3pp</div>
+          </div>
+          <div style="background:var(--bg3); padding:12px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+            <div style="font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px;">New Reg Risk</div>
+            <div style="font-size:26px; font-weight:700; font-family:'JetBrains Mono'; color:var(--amber);">78</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cascading Effects</div>
+        <div style="font-size: 13px; color: var(--text2); line-height: 1.8;">
+          A single shock propagates through:<br>
+          ✓ Success probability recalculation<br>
+          ✓ Regulatory risk re-scoring<br>
+          ✓ Vote approval re-simulation<br>
+          ✓ Spread forecast re-projection<br>
+          ✓ New confidence bands
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">11 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 12: GRAPH =================== -->
+<div class="slide" id="slide-12">
+  <h3 class="section-title">Feature Deep-Dive</h3>
+  <h1 class="slide-title">Deal Ecosystem <span class="hl">Force-Directed Graph</span></h1>
+  <p class="slide-subtitle">Interactive network visualization of all entities in a deal's ecosystem.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Node Types</div>
+      <table class="ppt-table" style="font-size: 12px;">
+        <thead><tr><th>Type</th><th>Color</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Acquirer</td><td style="color:#0891b2; font-weight:600;">● Cyan</td><td>MSFT, AVGO</td></tr>
+          <tr><td>Target</td><td style="color:#059669; font-weight:600;">● Green</td><td>ATVI, VMW</td></tr>
+          <tr><td>Regulator</td><td style="color:#dc2626; font-weight:600;">● Red</td><td>FTC, CMA, SAMR</td></tr>
+          <tr><td>Sector</td><td style="color:#d97706; font-weight:600;">● Amber</td><td>Technology, Energy</td></tr>
+          <tr><td>Geography</td><td style="color:#94a3b8; font-weight:600;">● Gray</td><td>US, JP, CN</td></tr>
+          <tr><td>Institutional</td><td style="color:#94a3b8; font-weight:600;">● Gray</td><td>BlackRock, Vanguard</td></tr>
+          <tr><td>Activist</td><td style="color:#dc2626; font-weight:600;">● Red</td><td>Activist Coalition</td></tr>
+          <tr><td>Rival</td><td style="color:#ea580c; font-weight:600;">● Orange</td><td>Potential Rival</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">Edge Types (Relationships)</div>
+        <table class="ppt-table" style="font-size: 12px;">
+          <thead><tr><th>Relationship</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600;">ACQUIRES</td><td>Acquirer → Target</td></tr>
+            <tr><td style="color:var(--red); font-weight:600;">REVIEWS</td><td>Regulator → Target</td></tr>
+            <tr><td style="color:var(--amber); font-weight:600;">OPERATES_IN</td><td>Entity → Sector</td></tr>
+            <tr><td style="color:var(--text3); font-weight:600;">DOMICILED</td><td>Entity → Country</td></tr>
+            <tr><td style="color:var(--text3); font-weight:600;">OWNS</td><td>Shareholder → Target</td></tr>
+            <tr><td style="color:var(--red); font-weight:600;">PRESSURE</td><td>Activist → Target</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">Technology</div>
+        <div style="font-size: 13px; color: var(--text2);">
+          <strong style="color:var(--text);">react-force-graph-2d</strong> with custom Canvas rendering, neon glow effects, JetBrains Mono labels, and directional particles on edges.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">12 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 13: BENCHMARKING =================== -->
+<div class="slide" id="slide-13">
+  <h3 class="section-title">Evaluation</h3>
+  <h1 class="slide-title">Benchmarking & <span class="hl">Comparison</span></h1>
+  <p class="slide-subtitle">System validation through analytical correctness and competitive analysis.</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="card" style="margin-bottom: 14px;">
+        <div class="card-title">Validation Results</div>
+        <table class="ppt-table" style="font-size: 11px;">
+          <thead><tr><th>Test Case</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Cross-border (AVGO-VMW)</td><td class="cmp-yes">✅ P=67%, Risk=74</td></tr>
+            <tr><td>Domestic cash (XOM-PXD)</td><td class="cmp-yes">✅ P=78%, Risk=48</td></tr>
+            <tr><td>CFIUS+SAMR (AMAT-KMTUY)</td><td class="cmp-yes">✅ P=55%, Risk=86</td></tr>
+            <tr><td>India media (RIL-VIACOM18)</td><td class="cmp-yes">✅ P=83%, Risk=52</td></tr>
+            <tr><td>FTC Phase II shock</td><td class="cmp-yes">✅ Δ = −19.3pp</td></tr>
+            <tr><td>Monte Carlo CI</td><td class="cmp-yes">✅ CI = ±3–5pp</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">Performance</div>
+        <table class="ppt-table" style="font-size: 11px;">
+          <tr><td>Deal list (30 deals)</td><td style="color:var(--green); font-weight:600;">&lt; 200ms</td></tr>
+          <tr><td>Full deal intelligence</td><td style="color:var(--green); font-weight:600;">&lt; 350ms</td></tr>
+          <tr><td>Scenario simulation</td><td style="color:var(--green); font-weight:600;">&lt; 250ms</td></tr>
+          <tr><td>LLM first-token</td><td style="color:var(--amber); font-weight:600;">~800ms</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">vs. Industry Tools</div>
+      <table class="ppt-table" style="font-size: 11px;">
+        <thead><tr><th>Feature</th><th>Bloomberg</th><th>Refinitiv</th><th style="color:var(--primary);">Ours</th></tr></thead>
+        <tbody>
+          <tr><td>ML Prediction</td><td class="cmp-no">❌</td><td class="cmp-partial">⚠️</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>Spread + CI</td><td class="cmp-partial">⚠️</td><td class="cmp-partial">⚠️</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>Reg Risk Score</td><td class="cmp-no">❌</td><td class="cmp-no">❌</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>Vote Sim</td><td class="cmp-no">❌</td><td class="cmp-no">❌</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>LLM Analysis</td><td class="cmp-no">❌</td><td class="cmp-no">❌</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>What-If</td><td class="cmp-partial">⚠️</td><td class="cmp-partial">⚠️</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>Ecosystem Graph</td><td class="cmp-no">❌</td><td class="cmp-no">❌</td><td class="cmp-yes">✅</td></tr>
+          <tr><td>Cost</td><td>$24K/yr</td><td>$15K/yr</td><td style="color:var(--green); font-weight:600;">Free</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">13 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 14: LIMITATIONS =================== -->
+<div class="slide" id="slide-14">
+  <h3 class="section-title">Limitations & Future</h3>
+  <h1 class="slide-title">Limitations & <span class="hl">Future Work</span></h1>
+
+  <div class="grid-2">
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="card-title" style="color: var(--red);">Current Limitations</div>
+      <ul class="feature-list">
+        <li><div class="icon red">📊</div><div><strong>Synthetic Data</strong> — 30 deals, not validated against live market</div></li>
+        <li><div class="icon red">⚙️</div><div><strong>Heuristic Models</strong> — Manually calibrated, not learned from data</div></li>
+        <li><div class="icon red">🔌</div><div><strong>No Live Feeds</strong> — No Bloomberg/Refinitiv/EDGAR integration</div></li>
+        <li><div class="icon amber">🤖</div><div><strong>LLM Hallucination</strong> — May generate inaccurate precedent</div></li>
+        <li><div class="icon amber">💱</div><div><strong>Single Currency</strong> — USD only, no FX modeling</div></li>
+        <li><div class="icon amber">🔄</div><div><strong>No Backtesting</strong> — No historical validation framework</div></li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--green);">
+      <div class="card-title" style="color: var(--green);">Future Improvements</div>
+      <ul class="feature-list">
+        <li><div class="icon green">📡</div><div><strong>Live Data</strong> — Bloomberg B-PIPE, SEC EDGAR feeds</div></li>
+        <li><div class="icon green">🧠</div><div><strong>Trained ML</strong> — XGBoost on 2,000+ historical deals</div></li>
+        <li><div class="icon green">📚</div><div><strong>RAG Pipeline</strong> — Vector DB for FTC/EU decisions</div></li>
+        <li><div class="icon cyan">🔔</div><div><strong>Alert System</strong> — Email/Slack on spread changes</div></li>
+        <li><div class="icon cyan">📊</div><div><strong>Portfolio Optimization</strong> — Kelly criterion, risk parity</div></li>
+        <li><div class="icon cyan">📱</div><div><strong>Mobile App</strong> — Responsive mobile interface</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">14 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 15: DATASET =================== -->
+<div class="slide" id="slide-15">
+  <h3 class="section-title">Dataset</h3>
+  <h1 class="slide-title">30 Synthetic <span class="hl">M&A Deals</span></h1>
+  <p class="slide-subtitle">Realistic deals spanning multiple sectors, countries, and regulatory regimes.</p>
+
+  <table class="ppt-table" style="font-size: 11px;">
+    <thead><tr><th>Deal</th><th>Value</th><th>Sector</th><th>Regulators</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Microsoft → Activision</td><td>$68.7B</td><td>Technology / Gaming</td><td>FTC, CMA, EC, SAMR</td><td style="color:var(--green); font-weight:600;">Closed</td></tr>
+      <tr><td>Broadcom → VMware</td><td>$61.0B</td><td>Technology / Enterprise SW</td><td>FTC, CMA, EC, SAMR</td><td style="color:var(--green); font-weight:600;">Closed</td></tr>
+      <tr><td>ExxonMobil → Pioneer</td><td>$64.5B</td><td>Energy / Oil & Gas</td><td>FTC</td><td style="color:var(--green); font-weight:600;">Closed</td></tr>
+      <tr><td>Chevron → Hess</td><td>$53.0B</td><td>Energy / Oil & Gas</td><td>FTC, Arb</td><td style="color:var(--amber); font-weight:600;">Pending</td></tr>
+      <tr><td>Reliance → Viacom18</td><td>$8.5B</td><td>Media & Entertainment</td><td>CCI, NCLT, SEBI</td><td style="color:var(--green); font-weight:600;">Closed</td></tr>
+      <tr><td>Applied Materials → Kokusai</td><td>$9.0B</td><td>Semiconductors</td><td>SAMR, JFTC, CFIUS, EC</td><td style="color:var(--amber); font-weight:600;">Pending</td></tr>
+      <tr><td colspan="5" style="text-align:center; color:var(--text3); font-style:italic;">... and 24 more deals across Pharma, Cybersecurity, Insurance, Media, Banking, Mining</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid-4" style="margin-top: 20px;">
+    <div class="card" style="text-align:center; border-top: 3px solid var(--green);">
+      <div class="card-value" style="font-size:28px; color:var(--green);">30</div>
+      <div class="card-sub">Total Deals</div>
+    </div>
+    <div class="card" style="text-align:center; border-top: 3px solid var(--primary);">
+      <div class="card-value" style="font-size:28px; color:var(--primary);">12+</div>
+      <div class="card-sub">Industry Sectors</div>
+    </div>
+    <div class="card" style="text-align:center; border-top: 3px solid var(--amber);">
+      <div class="card-value" style="font-size:28px; color:var(--amber);">18</div>
+      <div class="card-sub">Regulators</div>
+    </div>
+    <div class="card" style="text-align:center; border-top: 3px solid var(--purple);">
+      <div class="card-value" style="font-size:28px; color:var(--purple);">24</div>
+      <div class="card-sub">Countries</div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">15 / 16</span>
+  </div>
+</div>
+
+<!-- =================== SLIDE 16: THANK YOU =================== -->
+<div class="slide cover-slide" id="slide-16">
+  <div class="cover-badge">Conclusion</div>
+  <h1 class="slide-title" style="font-size: 44px;"><span class="hl">Arbitrage.Terminal</span></h1>
+  <p class="slide-subtitle" style="max-width: 650px;">
+    Successfully built a full-stack AI platform that integrates 6 quantitative modules — 
+    ML prediction, time-series forecasting, regulatory risk, Monte Carlo simulation, 
+    geopolitical friction, and LLM analysis — into a single, professional-grade 
+    decision-support tool for merger arbitrage.
+  </p>
+
+  <div style="display: flex; gap: 32px; margin: 28px 0; justify-content: center;">
+    <div style="text-align: center;"><div class="big-num">6</div><div style="font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:2px;">Quant Modules</div></div>
+    <div style="text-align: center;"><div class="big-num">30</div><div style="font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:2px;">Synthetic Deals</div></div>
+    <div style="text-align: center;"><div class="big-num">10</div><div style="font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:2px;">API Endpoints</div></div>
+    <div style="text-align: center;"><div class="big-num">7</div><div style="font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:2px;">Custom Components</div></div>
+  </div>
+
+  <div style="margin-top: 20px; font-size: 22px; font-weight: 700; color: var(--text);">
+    Thank You! Questions?
+  </div>
+  <div class="cover-meta" style="margin-top: 16px;">
+    <div><strong>Mohit Patle</strong> (27PGAI0102) &nbsp;·&nbsp; <strong>Pushkar Brahmankar</strong> (27PGAI0100)</div>
+    <div class="cover-institution">Jio Institute</div>
+    <div style="font-size: 12px; color: var(--text3);">PGP Artificial Intelligence and Data Science · June 2026</div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="footer-logo">Jio Institute · PGP AI&DS</span>
+    <span class="slide-num">16 / 16</span>
+  </div>
+</div>
+
+<!-- =================== NAVIGATION =================== -->
+<div class="nav-controls">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  const total = slides.length;
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  }
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prevSlide(); }
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+  });
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+  });
+  showSlide(0);
+</script>
+
+</body>
+</html>
